@@ -1,0 +1,39 @@
+#summary How to build the code.
+
+= Prerequisites =
+
+ * Android SDK and NDK v.1.6r1 or higher
+ * JRE & JDK 1.6
+ * Eclipse 3.5
+ * ADT plug-in v0.9.5 for Eclipse
+ * GNU make
+
+= Details =
+
+The following assumes that your operating system is Linux.
+I didn't try this in Windows, but I think it should be straightforward.
+
+ # Install and setup the above tools if you didn't do it yet.
+ # Download the sources from this SVN:
+{{{
+svn checkout http://andless.googlecode.com/svn/trunk andLess
+}}}
+ # Go to your NDK root directory
+ # mkdir apps/lossless
+ # Create the file "apps/lossless/Application.mk" containing two lines:
+{{{
+APP_PROJECT_PATH := $(call my-dir)/project
+APP_MODULES      := ape flac wav wv mpc lossless
+}}}
+ # In apps/lossless, make a link called "project" pointing to andLess directory (full path)
+ # Change the following line in build-binary.mk <br> I don't know how to get around this NDK feature gracefully, but the lib won't link otherwise. If you do know, please inform me.
+{{{
+diff -r android-ndk-1.6_r1.orig/build/core/build-binary.mk android-ndk-1.6_r1/build/core/build-binary.mk
+166c166
+< $(LOCAL_BUILT_MODULE): PRIVATE_STATIC_LIBRARIES := $(static_libraries)
+---
+> $(LOCAL_BUILT_MODULE): PRIVATE_WHOLE_STATIC_LIBRARIES := $(static_libraries)
+}}} 
+ # Go to the NDK root dir and "make APP=lossless" to get "liblossless.so" in its proper place, so that it'll get added to the .apk when you build the java code.
+ # Load the Java part of this project in Eclipse and build it.
+You should get an installable apk package containing the library.
