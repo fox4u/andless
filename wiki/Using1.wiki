@@ -17,7 +17,7 @@ Playlists are actually ordinary text files with ".playlist" extension, each line
 
 You can create them manually on the device, e.g., 
 {{{
-find /sdcard/dir -name \*.flac -o -name \*.ape > dir.playlist
+find /sdcard/dir -name \*.flac -o -name \*.ape > /sdcard/dir.playlist
 }}}
 or as described below.
 
@@ -33,4 +33,3 @@ This was intended for those who like the "shuffle" feature now added to Menu->Se
 
 To edit a playlist, go inside it and long-press a file you want to move or delete.
 If you edit M3U and PLS playlists, they are converted and saved with ".playlist" extension.
-
