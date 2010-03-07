@@ -11,6 +11,4 @@ excellent code was most extensively used.<br>
 In my opinion, it's the best code ever written for mobile devices.
 
 And, of course, I'm very grateful to the members of the famous FFMPEG Project (http://www.ffmpeg.org).<br>
-We couldn't ever have any audio or video on our computers without their efforts.
-
-
+We couldn't ever have any decent audio or video on our computers without their efforts.
