@@ -1,4 +1,4 @@
-#summary How to build the code.
+#summary How to build the code
 
 = Prerequisites =
 
