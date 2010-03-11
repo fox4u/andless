@@ -35,5 +35,5 @@ diff -r android-ndk-1.6_r1.orig/build/core/build-binary.mk android-ndk-1.6_r1/bu
 > $(LOCAL_BUILT_MODULE): PRIVATE_WHOLE_STATIC_LIBRARIES := $(static_libraries)
 }}} 
  # Go to the NDK root dir and "make APP=lossless" to get "liblossless.so" in its proper place, so that it'll get added to the .apk when you build the java code.
- # Load the Java part of this project in Eclipse and build it.
+ # Import the Java part to Eclipse and build it.
 You should get an installable apk package containing the library.
