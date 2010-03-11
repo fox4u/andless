@@ -26,7 +26,7 @@ APP_PROJECT_PATH := $(call my-dir)/project
 APP_MODULES      := ape flac wav wv mpc lossless
 }}}
  # In apps/lossless, make a link called "project" pointing to andLess directory (full path)
- # For NDK 1.6 or earlier versions, change the following line in build-binary.mk <br>
+ # For NDK version 1.6 or earlier, change the following line in build-binary.mk <br>
 {{{
 diff -r android-ndk-1.6_r1.orig/build/core/build-binary.mk android-ndk-1.6_r1/build/core/build-binary.mk
 166c166
