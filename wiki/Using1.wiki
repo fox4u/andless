@@ -26,7 +26,7 @@ M3U and PLS playlists with relative paths are also recognised, but *may* be pars
 
 To create a playlist or to add files to it, long-press a directory or a file you want to add.
 
-(E.g., to create a playlist with *all* your lossless files, go to "/", long press sdcard, check "Recursive", and click "Add").
+(E.g., to create a playlist with *all* your music files, go to "/", long press sdcard, check "Recursive", and click "Add").
 
 CUE tracks or playlists cannot be added to a playlist: if you long-press CUE or playlist, it'll start playing immediately without going inside it.
 
