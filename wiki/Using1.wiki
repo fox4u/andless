@@ -31,4 +31,4 @@ To create a playlist or to add files to it, long-press a directory or a file you
 CUE tracks or playlists cannot be added to a playlist. If you long-press CUE or playlist, it'll start playing immediately without going inside it: this was intended for those who like the "shuffle" feature selectable from Menu->Settings (only playlists are shuffled, not CUEs or directories).
 
 To edit a playlist, go inside it and long-press a file you want to move or delete.
-After you edit M3U or PLS playlists, they'll be converted and saved with ".playlist" extension.
+If you edit M3U or PLS playlists, they'll be converted and saved with ".playlist" extension.
