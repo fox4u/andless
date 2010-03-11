@@ -3,7 +3,7 @@
 = CUE support =
 
 CUE files may be based on any supported audio files (i.e., wav, flac, ape, wv or mpc).
-Their encoding must be ASCII or UTF-8 (the same also applies to playlists).
+Their encoding must be either ASCII or UTF-8 (the same also applies to playlists).
 
 As the CUE format itself is not standardised, some programs write curious cue files.
 My parser is too simple to handle that; however, it understands almost all cues I have (several hundred). 
