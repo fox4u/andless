@@ -2,7 +2,7 @@
 
 = Prerequisites =
 
- * Android SDK and NDK v.1.6r1 or higher
+ * Android SDK and NDK v.1.6r1 or later
  * JRE & JDK 1.6
  * Eclipse 3.5
  * ADT plug-in v0.9.5 for Eclipse
