@@ -23,7 +23,7 @@ svn checkout http://andless.googlecode.com/svn/trunk andLess
  # Create the file "apps/lossless/Application.mk" containing two lines:
 {{{
 APP_PROJECT_PATH := $(call my-dir)/project
-APP_MODULES      := ape flac wav wv mpc lossless
+APP_MODULES      := alac ape flac wav wv mpc lossless
 }}}
  # In apps/lossless, make a link called "project" pointing to the directory where you've unpacked the andLess sources (full path)
  # For NDK version 1.6, change the following line in build-binary.mk <br>
