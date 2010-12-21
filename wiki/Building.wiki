@@ -37,3 +37,5 @@ diff -r android-ndk-1.6_r1.orig/build/core/build-binary.mk android-ndk-1.6_r1/bu
  # Go to the NDK root dir and "make APP=lossless" to get "liblossless.so" in its proper place, so that it'll get added to the .apk when you build the java code.
  # Import the Java part of this project to Eclipse and build it.
 You should get an installable apk package containing the library.
+
+Update for Windows users: andLess was reported to compile with ndk-r4 & 5 using http://code.google.com/p/mini-cygwin (thanks *vrix yan*)
