@@ -1950,7 +1950,7 @@ public class AndLess extends Activity implements Comparator<File> {
 			return (bytes[0] == -1 && bytes[1] == -2)
 					|| (bytes[0] == -2 && bytes[1] == -1);
     	}
-
+    	
        	///////////////////////////////////////////////////////
     	////////////////// Media button events ////////////////
     	
