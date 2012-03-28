@@ -63,7 +63,6 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import net.avs234.iconifiedlist.IconifiedText;
 import net.avs234.iconifiedlist.IconifiedTextListAdapter;
 
-
 public class AndLess extends Activity implements Comparator<File> {
 	
     	// Current directory **OR** current cue/playlist file
@@ -192,7 +191,8 @@ public class AndLess extends Activity implements Comparator<File> {
     				if(s != null) {
     					File f = new File(s);
     					if(f.exists() && (f.isDirectory() || hasPlistExt(s) || hasCueExt(s))) {
-    						if(setAdapter(f)) { 
+							try {
+    						  if(setAdapter(f)) { 
     							log_msg("restored previous playlist");
     							int i = srv.get_cur_pos() + 1;
     							if(i >= 0 && first_file_pos + i < directoryEntries.size()) {
@@ -202,10 +202,14 @@ public class AndLess extends Activity implements Comparator<File> {
     								cBack.playItemChanged(true,getString(R.string.strPaused));
     								buttPause.setBackgroundDrawable(getResources().getDrawable(R.drawable.s_play));
     							} else if(srv.is_running()) {
-    								cBack.playItemChanged(false,directoryEntries.get(first_file_pos+i).getText());
-    								buttPause.setBackgroundDrawable(getResources().getDrawable(R.drawable.s_pause));
+
+        								cBack.playItemChanged(false,directoryEntries.get(first_file_pos+i).getText());
+        								buttPause.setBackgroundDrawable(getResources().getDrawable(R.drawable.s_pause));
     							} else cBack.playItemChanged(true,getString(R.string.strStopped));
-    						} else s = null;
+    						  } else s = null;
+							} catch (Exception e) {
+								log_err("exception in pause button handler");
+							}
     					}
     				} 	
     				
@@ -273,7 +277,7 @@ public class AndLess extends Activity implements Comparator<File> {
     					case cmd_vol_down:	
 							srv.dec_vol(); break;    						
     				}
-    			} catch (RemoteException e) {log_err("remote exception in SendSrvCmd (" + func[0] + "): " + e.toString()); }
+    			} catch (Exception e) {log_err("exception in SendSrvCmd (" + func[0] + "): " + e.toString()); }
     			return dont_change_btn;
     		}
     		protected void onPostExecute(Integer result) {
@@ -413,15 +417,15 @@ public class AndLess extends Activity implements Comparator<File> {
 					if(srv.is_running()) saveBook();
 					srv.shutdown();	
 				}
-			} catch (Exception e) {
+				prefs.save();
+				if(conn != null) {
+	        		log_msg("unbinding service");
+	        		unbindService(conn);
+	        		conn = null;
+	        	}
+    		} catch (Exception e) {
 				log_err("exception while shutting down");
 			}
-			prefs.save();
-			if(conn != null) {
-        		log_msg("unbinding service");
-        		unbindService(conn);
-        		conn = null;
-        	}
     	    Intent intie = new Intent();
             intie.setClassName("net.avs234", "net.avs234.AndLessSrv");
             if(!stopService(intie)) log_err("service not stopped");	
@@ -1150,7 +1154,8 @@ public class AndLess extends Activity implements Comparator<File> {
     	private String curRowIs;
     	private String itemDeleted;
     	private Dialog thisDialog;
-    	private CheckBox chb;
+    	private CheckBox chb, chbp;
+    	
     	protected void  onPrepareDialog  (int id, Dialog  dialog) {
     		switch(id) {
     		   	case EDIT_PLAYLIST_DLG:
@@ -1174,13 +1179,14 @@ public class AndLess extends Activity implements Comparator<File> {
        				TextView chbt = (TextView) aDialog.findViewById(R.id.CheckBoxText);
        				chbt.setEnabled(false);
        				chb = (CheckBox) aDialog.findViewById(R.id.CheckRecursive);
+       				chbp = (CheckBox) aDialog.findViewById(R.id.CheckPlayAfter);
        				chb.setChecked(false);
-       				
+       				chbp.setChecked(false);
+   					chb.setEnabled(false);
+   					chbt.setEnabled(false);
+       				if(files == null || files.size() == 0 || files.size() >= cur_longpressed) break;
        				File f = new File(files.get(cur_longpressed));
-       				if(!f.isDirectory()) {
-       					chb.setEnabled(false);
-       					chbt.setEnabled(false);
-       				} else {
+       				if(f.isDirectory()) {
        					chb.setEnabled(true);
        					chbt.setEnabled(true);
        				}
@@ -1215,6 +1221,7 @@ public class AndLess extends Activity implements Comparator<File> {
    		    			Log.i("andless", "0");       		    			       		    			
    		    			String spath = new String(path);
    		    			String sname = new String(name);
+   		    			boolean playafter = chbp.isChecked();
    		    			if(!name.endsWith(plist_ext)) name += plist_ext;
    		    			if(!path.endsWith("/")) path += "/";
    		    			path = path + name;
@@ -1268,7 +1275,8 @@ public class AndLess extends Activity implements Comparator<File> {
    		    			dismissDialog(ADD_PLAYLIST_DLG);
    		    			Log.i("andless", "3");
    		    			thisDialog = null;
-   			        	}
+   			        	if(playafter) playPath(plist_file);
+   			          }
    			        });
    				add_playlist_dlg.setNegativeButton(R.string.strCancel, new DialogInterface.OnClickListener() {
    			        public void onClick(DialogInterface dialog, int whichButton) {
@@ -1607,7 +1615,7 @@ public class AndLess extends Activity implements Comparator<File> {
    				}
     		return filez;
     	}
-    	
+    	    	
     	private boolean setAdapterFromDir(File fpath) {
     		try {
 
@@ -1658,7 +1666,7 @@ public class AndLess extends Activity implements Comparator<File> {
     	    }
   			
     	}
-    	
+    	    	
     	/////////////////////////////////////////////////
     	////////////// Playlist files ///////////////////
 

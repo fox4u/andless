@@ -70,7 +70,7 @@
 <string name="strMplayerError">Ошибка медиа-плеера</string>
 <string name="strDriverMode">Прямой доступ к драйверу</string>
 <string name="strSaveBooks">Автосохранение закладок</string>
-<string name="strAbout">Android плеер andLess для звуковых файлов без потерь. Дата сборки Nov  6, 2011</string>
+<string name="strAbout">Android плеер andLess для звуковых файлов без потерь. Дата сборки Mar 27, 2012</string>
 <string name="strAbout1">О программе</string>
 <string name="strQuit">Выход</string>
 <string name="strHideExt">Не показывать расширений файлов</string>
@@ -82,4 +82,5 @@
 <string name="strBSettings">Основные настройки</string>
 <string name="strHsRemove">Наушники: откл=пауза</string>
 <string name="strHsInsert">Наушники: вкл=продолжение</string>
+<string name="strPlayAfter">Играть после добавления</string>
 </resources>

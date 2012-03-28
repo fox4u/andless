@@ -18,7 +18,7 @@
 <string name="strColor">Motivo</string>
 <string name="strNormal">Motivo negro</string>
 <string name="strInverse">Motivo claro</string>
-<string-array name="Errores">
+<string-array name="Errors">
 <item>Error de inicialización</item>
 <item>Parámetro inválido</item>
 <item>Error al abrir el archivo</item>
@@ -82,4 +82,5 @@
 <string name="strBSettings">Configuración básica</string>
 <string name="strHsRemove">Pausa de HS omitida</string>
 <string name="strHsInsert">Retomar al insertar HS</string>
+<string name="strPlayAfter">Jugar después de añadir</string>
 </resources>
