@@ -194,9 +194,9 @@ public class AndLessSrv extends Service {
 			if(mplayer == null) return LIBLOSSLESS_ERR_NOCTX;
 			mplayer.setDataSource(file);
 			mplayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-				public boolean onError(MediaPlayer mp, int what, int extra) {
-					if(mplayer != null) synchronized(mplayer_lock) {
-						mplayer.release(); 	mplayer = null;
+				public boolean onError(MediaPlayer mp, int what, int extra)  {
+					synchronized(mplayer_lock) {
+						if(mplayer != null) mplayer.release(); 	mplayer = null;
 					}
 					log_err("mplayer playback aborted with errors: " + what + ", " + extra);
 					informTrack(getString(R.string.strMplayerError),true);

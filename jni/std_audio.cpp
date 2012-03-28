@@ -2,6 +2,7 @@
 #include <jni.h>
 #include <utils/String8.h>
 #include <android/log.h>
+#include <sys/system_properties.h>
 
 #ifndef BUILD_GINGER 
 #include <media/AudioTrack.h>
@@ -14,6 +15,7 @@
 #define FROM_ATRACK_CODE 1
 #include "std_audio.h"
 
+static int sdk_version = 0;
 
 namespace android {
 extern "C" {
@@ -156,19 +158,26 @@ int libmediacb_start(msm_ctx *ctx, int channels, int samplerate) {
 
    if(!atrack) return LIBLOSSLESS_ERR_INIT;
    ctx->track = atrack; 	
+
    status_t status;
-   status = atrack->set(AudioSystem::MUSIC, samplerate,AudioSystem::PCM_16_BIT, channels,
+   int chans; 
+
+   if(!sdk_version) {	
+       char c[PROP_VALUE_MAX];
+        if(__system_property_get("ro.build.version.sdk",c) > 0) sscanf(c,"%d",&sdk_version);
+        else sdk_version = 8;
+   } 	
+   if(sdk_version > 13) chans = (channels == 2) ? 3 : 1;
+   else if(sdk_version > 8) chans = (channels == 2) ? 12 : 4;
+   else chans = channels;
+ 
+   status = atrack->set(AudioSystem::MUSIC, samplerate,AudioSystem::PCM_16_BIT, chans,
 			DEFAULT_ATRACK_CONF_BUFSZ/(2*channels),0,cbf,ctx);
 
-   if(status != NO_ERROR) { // for Andriod 2.1 and higher
-	int chans = (channels == 2) ? 12 : 4;
-	status = atrack->set(AudioSystem::MUSIC, samplerate, AudioSystem::PCM_16_BIT, chans,
-			DEFAULT_ATRACK_CONF_BUFSZ/(2*channels),0,cbf,ctx);
-	if(status != NO_ERROR) {
-		delete atrack; ctx->track = 0;
-		return LIBLOSSLESS_ERR_INIT;  
-	}		
-  }
+   if(status != NO_ERROR) {
+	delete atrack; ctx->track = 0;
+	return LIBLOSSLESS_ERR_INIT;  
+   }
   __android_log_print(ANDROID_LOG_INFO,"liblossless","AudioTrack setup OK, starting audio!");
    ctx->conf_size = DEFAULT_CONF_BUFSZ; 	
    atrack->start();	
