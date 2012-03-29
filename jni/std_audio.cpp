@@ -168,7 +168,7 @@ int libmediacb_start(msm_ctx *ctx, int channels, int samplerate) {
         else sdk_version = 8;
    } 	
    if(sdk_version > 13) chans = (channels == 2) ? 3 : 1;
-   else if(sdk_version > 8) chans = (channels == 2) ? 12 : 4;
+   else if(sdk_version > 6) chans = (channels == 2) ? 12 : 4;
    else chans = channels;
  
    status = atrack->set(AudioSystem::MUSIC, samplerate,AudioSystem::PCM_16_BIT, chans,
