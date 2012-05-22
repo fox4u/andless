@@ -200,7 +200,9 @@ public class AndLessSrv extends Service {
 					}
 					log_err("mplayer playback aborted with errors: " + what + ", " + extra);
 					informTrack(getString(R.string.strMplayerError),true);
-					mplayer_lock.notify();
+					synchronized(mplayer_lock) {
+						mplayer_lock.notify();
+					}
 					return false;
 				}
 			});

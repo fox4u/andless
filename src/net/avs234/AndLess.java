@@ -277,7 +277,10 @@ public class AndLess extends Activity implements Comparator<File> {
     					case cmd_vol_down:	
 							srv.dec_vol(); break;    						
     				}
-    			} catch (Exception e) {log_err("exception in SendSrvCmd (" + func[0] + "): " + e.toString()); }
+    			} catch (Exception e) {
+				log_err("exception in SendSrvCmd (" + func[0] + "): " + e.toString()); 
+				if(srv == null || conn == null) conn = new_connection();
+			}
     			return dont_change_btn;
     		}
     		protected void onPostExecute(Integer result) {
@@ -1235,7 +1238,7 @@ public class AndLess extends Activity implements Comparator<File> {
    		    			if(f.isDirectory()) {
    		    				if(chb.isChecked()) {
    		    					filez = recurseDir(f);
-   		    					if(filez.size() < 1) {
+   		    					if(filez == null || filez.size() < 1) {
    		    						Toast.makeText(getApplicationContext(), R.string.strNoFiles, Toast.LENGTH_SHORT).show();
    		    						return;
    		    					}
