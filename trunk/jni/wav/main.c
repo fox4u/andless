@@ -57,8 +57,8 @@ static int wav_hdr(int fd, unsigned *rate, unsigned *channels, unsigned *bps) {
 
         return -1;
     }
-    if ((hdr.audio_format != FORMAT_PCM) ||
-        (hdr.fmt_sz != 16)) {
+    if ((hdr.audio_format != FORMAT_PCM) /*||
+        (hdr.fmt_sz != 16) */) {
         return -1;
     }
     if (hdr.bits_per_sample != 16) {

@@ -163,6 +163,7 @@ JNIEXPORT jint JNICALL Java_net_avs234_AndLessSrv_audioInit(JNIEnv *env, jobject
 
   msm_ctx *ctx;
 
+    __android_log_print(ANDROID_LOG_INFO,"liblossless","audio_init: prev_ctx=%p", prev_ctx);
     if(prev_ctx) {
 	audio_stop(prev_ctx);
 	ctx = prev_ctx;
@@ -183,11 +184,13 @@ JNIEXPORT jint JNICALL Java_net_avs234_AndLessSrv_audioInit(JNIEnv *env, jobject
     ctx->mode = mode;
     ctx->state = MSM_STOPPED;
     ctx->track_time = 0;	
+    __android_log_print(ANDROID_LOG_INFO,"liblossless","audio_init: return ctx=%p",ctx);
     return (jint) ctx;	
 }
 
 JNIEXPORT jboolean JNICALL Java_net_avs234_AndLessSrv_audioExit(JNIEnv *env, jobject obj, msm_ctx *ctx) {
     if(!ctx) return false;
+    __android_log_print(ANDROID_LOG_INFO,"liblossless","audio_exit: ctx=%p",ctx);
     audio_stop(ctx);
     if(ctx->fd >= 0)  close(ctx->fd);
     pthread_mutex_destroy(&ctx->mutex);
@@ -222,7 +225,9 @@ static jboolean libinit(JNIEnv *env, jobject obj, jint sdk) {
 */
      __android_log_print(ANDROID_LOG_INFO,"liblossless","libinit: sdk=%d",sdk);
     if(!libhandle) {
-        if(sdk > 8) libhandle = dlopen("/data/data/net.avs234/lib/libatrack9.so", RTLD_NOW);
+	if(sdk >= 17) libhandle = dlopen("/data/data/net.avs234/lib/libatrack17.so", RTLD_NOW);
+	else if(sdk == 16) libhandle = dlopen("/data/data/net.avs234/lib/libatrack16.so", RTLD_NOW);
+        else if(sdk > 8) libhandle = dlopen("/data/data/net.avs234/lib/libatrack9.so", RTLD_NOW);
         else libhandle = dlopen("/data/data/net.avs234/lib/libatrack8.so", RTLD_NOW);
 	if(libhandle) {
 		libmedia_pause = (typeof(libmedia_pause)) dlsym(libhandle,"libmedia_pause");
