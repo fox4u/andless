@@ -1,5 +1,6 @@
 package net.avs234;	
 
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -1121,7 +1122,7 @@ public class AndLess extends Activity implements Comparator<File> {
     	}
     	
     	private void setContent() {
-            setRequestedOrientation(1);
+//            setRequestedOrientation(1);
             buttPause = (Button) findViewById(R.id.ButtonPause);
             buttPrev = (Button) findViewById(R.id.ButtonPrev);
             buttNext = (Button) findViewById(R.id.ButtonNext);

@@ -1,19 +1,26 @@
-
 #include <jni.h>
 #include <utils/String8.h>
 #include <android/log.h>
 #include <sys/system_properties.h>
 
-#ifndef BUILD_GINGER 
-#include <media/AudioTrack.h>
-#else
+#ifdef BUILD_GINGER
 #include <media/AudioTrack9.h>
+#else
+#include <media/AudioTrack.h>
 #endif
 
 #include "main.h"
 #include "msm_audio.h"
 #define FROM_ATRACK_CODE 1
 #include "std_audio.h"
+
+#ifdef BUILD_JB
+#define _MUSIC 	AUDIO_STREAM_MUSIC
+#define _PCM_16_BIT AUDIO_FORMAT_PCM_16_BIT 
+#else
+#define _MUSIC AudioSystem::MUSIC
+#define _PCM_16_BIT AudioSystem::PCM_16_BIT
+#endif
 
 static int sdk_version = 0;
 
@@ -33,14 +40,14 @@ int libmedia_start(msm_ctx *ctx, int channels, int samplerate) {
    if(!ctx) return LIBLOSSLESS_ERR_NOCTX;
   __android_log_print(ANDROID_LOG_INFO,"liblossless","libmedia_start chans=%d rate=%d afd=%d atrack=%p",
                 channels, samplerate,ctx->afd,ctx->track);
-#if 1 
+
    if(ctx->track && ctx->samplerate == samplerate && ctx->channels == channels) {
 	((AudioTrack *) ctx->track)->stop();
 	((AudioTrack *) ctx->track)->flush();
 	((AudioTrack *)ctx->track)->start();
 	return 0; 
    }	
-#endif
+
    if(ctx->track) {
 	((AudioTrack *) ctx->track)->stop();
 	((AudioTrack *) ctx->track)->flush();
@@ -49,25 +56,28 @@ int libmedia_start(msm_ctx *ctx, int channels, int samplerate) {
    ctx->track = 0;	
    AudioTrack* atrack = new AudioTrack();
 
+
   __android_log_print(ANDROID_LOG_INFO,"liblossless","AudioTrack created at %p. Now trying to setup", atrack);
 
    if(!atrack) return LIBLOSSLESS_ERR_INIT;
    ctx->track = atrack; 	
-   status_t status = atrack->set(AudioSystem::MUSIC, samplerate, 
-	 AudioSystem::PCM_16_BIT, channels, DEFAULT_CONF_BUFSZ/(2*channels));
+   status_t status;	
+#ifndef BUILD_JB
+   status = atrack->set(_MUSIC, samplerate, _PCM_16_BIT, channels, DEFAULT_CONF_BUFSZ/(2*channels));
    if(status != NO_ERROR) { 
-
   __android_log_print(ANDROID_LOG_INFO,"liblossless","AudioTrack->set failed, error code=%d!", status);
-  __android_log_print(ANDROID_LOG_INFO,"liblossless","Well... trying new Android AudioSystem interface then");
+#endif
+  __android_log_print(ANDROID_LOG_INFO,"liblossless","Well... trying new Android AudioSystem interface");
 	int chans = (channels == 2) ? 12 : 4;
-	status = atrack->set(AudioSystem::MUSIC, samplerate, AudioSystem::PCM_16_BIT, chans, 
-		DEFAULT_CONF_BUFSZ/(2*channels));
+	status = atrack->set(_MUSIC, samplerate, _PCM_16_BIT, chans, DEFAULT_CONF_BUFSZ/(2*channels));
 	   if(status != NO_ERROR) {
-  __android_log_print(ANDROID_LOG_INFO,"liblossless","Does not work still, error code=%d. Bailing out.", status);
+  __android_log_print(ANDROID_LOG_INFO,"liblossless","Does not work, error code=%d. Bailing out.", status);
 		delete atrack; ctx->track = 0;
 		return LIBLOSSLESS_ERR_INIT;  
 	   }		
+#ifndef BUILD_JB
   }
+#endif
   __android_log_print(ANDROID_LOG_INFO,"liblossless","AudioTrack setup OK, starting audio!");
    ctx->conf_size = DEFAULT_CONF_BUFSZ; 	
    atrack->start();	
@@ -76,7 +86,7 @@ int libmedia_start(msm_ctx *ctx, int channels, int samplerate) {
 }
 
 void libmedia_stop(msm_ctx *ctx) {
-  __android_log_print(ANDROID_LOG_INFO,"liblossless","libmetia_stop called, ctx=%p, track=%p", ctx, 
+  __android_log_print(ANDROID_LOG_INFO,"liblossless","libmedia_stop called, ctx=%p, track=%p", ctx, 
 		ctx ? ctx->track : 0);
   if(ctx && ctx->track) {
 #if 0 
@@ -122,62 +132,76 @@ static void cbf(int event, void* user, void *info);
 
 int libmediacb_start(msm_ctx *ctx, int channels, int samplerate) {
 
+   status_t status;
+   int chans; 
+
    if(!ctx) return LIBLOSSLESS_ERR_NOCTX;
-	
-  __android_log_print(ANDROID_LOG_INFO,"liblossless","libmediacb_start chans=%d rate=%d afd=%d atrack=%p",
-                channels, samplerate,ctx->afd,ctx->track);
-#if 0 
-   if(ctx->track && ctx->samplerate == samplerate && ctx->channels == channels) {
-	((AudioTrack *) ctx->track)->stop();
-	((AudioTrack *) ctx->track)->flush();
+
+  __android_log_print(ANDROID_LOG_INFO,"liblossless","libmediacb_start ctx=%p chans=%d rate=%d afd=%d atrack=%p",
+                ctx, channels, samplerate,ctx->afd,ctx->track);
+
+   AudioTrack* atrack = (AudioTrack *) ctx->track;
+
+   if(atrack && ctx->samplerate == samplerate && ctx->channels == channels) {
+  __android_log_print(ANDROID_LOG_INFO,"liblossless","same audio track parameters, restarting");
+	atrack->stop();
+	atrack->flush();
 	ctx->cbstart = 0; ctx->cbend = 0;
-	((AudioTrack *) ctx->track)->start();
+	atrack->start();
 	return 0; 
    }	
-#endif
-
-   if(ctx->track) {
-//	((AudioTrack *) ctx->track)->stop();
-//	((AudioTrack *) ctx->track)->flush();
-	delete (AudioTrack *) ctx->track;
-   }	
-
-   ctx->track = 0;	
 
    if(!ctx->cbbuf) {
 	ctx->cbbuf = (unsigned char *) malloc(DEFAULT_CB_BUFSZ);
 	if(!ctx->cbbuf) return LIBLOSSLESS_ERR_NOMEM;
 	ctx->cbbuf_size = DEFAULT_CB_BUFSZ;
    }		
+
    ctx->cbstart = 0; ctx->cbend = 0;	
 
-   AudioTrack* atrack = new AudioTrack();
+   if(!atrack) {
+   	atrack = new AudioTrack();
+	if(!atrack) {
+		__android_log_print(ANDROID_LOG_ERROR,"liblossless","could not create AudioTrack!");
+		return LIBLOSSLESS_ERR_INIT;
+	}
+	 __android_log_print(ANDROID_LOG_INFO,"liblossless","AudioTrack created at %p. Now trying to setup (buffsz %d)", 
+		atrack, DEFAULT_ATRACK_CONF_BUFSZ);
+	if(!sdk_version) {	
+		char c[PROP_VALUE_MAX];
+		if(__system_property_get("ro.build.version.sdk",c) > 0) sscanf(c,"%d",&sdk_version);
+		else sdk_version = 8;
+		__android_log_print(ANDROID_LOG_INFO,"liblossless","got sdk_version %d", sdk_version);		
+	} 	
 
-  __android_log_print(ANDROID_LOG_INFO,"liblossless","AudioTrack created at %p. Now trying to setup (buffsz %d)", 
-	atrack, DEFAULT_ATRACK_CONF_BUFSZ);
+	if(sdk_version > 13) chans = (channels == 2) ? 3 : 1;
+	else if(sdk_version > 6) chans = (channels == 2) ? 12 : 4;
+	else chans = channels;
 
-   if(!atrack) return LIBLOSSLESS_ERR_INIT;
-   ctx->track = atrack; 	
+#ifdef BUILD_JB
+	status = atrack->set(_MUSIC, samplerate, _PCM_16_BIT, chans, DEFAULT_ATRACK_CONF_BUFSZ/(2*channels),AUDIO_OUTPUT_FLAG_NONE,cbf,ctx);
+#else
+	status = atrack->set(_MUSIC, samplerate, _PCM_16_BIT, chans, DEFAULT_ATRACK_CONF_BUFSZ/(2*channels),0,cbf,ctx);
+#endif
+	
+   	if(status != NO_ERROR) {
+		__android_log_print(ANDROID_LOG_INFO,"liblossless","AudioTrack setup failed");
+		delete atrack;
+		return LIBLOSSLESS_ERR_INIT;  
+	}
+	ctx->track = atrack;
+   } else {
+        atrack->stop();
+	atrack->flush();
+        ctx->cbstart = 0; ctx->cbend = 0;
+	__android_log_print(ANDROID_LOG_INFO,"liblossless","trying to reconfigure old AudioTrack");
+	status = atrack->setSampleRate(samplerate);
+        if(status != NO_ERROR) {
+                __android_log_print(ANDROID_LOG_INFO,"liblossless","could not set AudioTrack sample rate");
+                return LIBLOSSLESS_ERR_INIT;
+        }
+   }		
 
-   status_t status;
-   int chans; 
-
-   if(!sdk_version) {	
-       char c[PROP_VALUE_MAX];
-        if(__system_property_get("ro.build.version.sdk",c) > 0) sscanf(c,"%d",&sdk_version);
-        else sdk_version = 8;
-   } 	
-   if(sdk_version > 13) chans = (channels == 2) ? 3 : 1;
-   else if(sdk_version > 6) chans = (channels == 2) ? 12 : 4;
-   else chans = channels;
- 
-   status = atrack->set(AudioSystem::MUSIC, samplerate,AudioSystem::PCM_16_BIT, chans,
-			DEFAULT_ATRACK_CONF_BUFSZ/(2*channels),0,cbf,ctx);
-
-   if(status != NO_ERROR) {
-	delete atrack; ctx->track = 0;
-	return LIBLOSSLESS_ERR_INIT;  
-   }
   __android_log_print(ANDROID_LOG_INFO,"liblossless","AudioTrack setup OK, starting audio!");
    ctx->conf_size = DEFAULT_CONF_BUFSZ; 	
    atrack->start();	
@@ -192,7 +216,7 @@ int libmediacb_start(msm_ctx *ctx, int channels, int samplerate) {
 }
 
 void libmediacb_stop(msm_ctx *ctx) {
-  __android_log_print(ANDROID_LOG_INFO,"liblossless","libmetia_stop called, ctx=%p, track=%p", ctx, 
+  __android_log_print(ANDROID_LOG_INFO,"liblossless","libmediacb_stop called, ctx=%p, track=%p", ctx, 
 		ctx ? ctx->track : 0);
   if(ctx && ctx->track) {
         pthread_mutex_lock(&ctx->cbmutex);
@@ -203,6 +227,7 @@ void libmediacb_stop(msm_ctx *ctx) {
 	ctx->track_time = 0;
 	ctx->state = (msm_ctx::_msm_state_t) 0;
    }		
+  __android_log_print(ANDROID_LOG_INFO,"liblossless","libmediacb_stop exit");
 }
 
 

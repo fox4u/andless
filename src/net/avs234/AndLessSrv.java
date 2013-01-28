@@ -105,6 +105,7 @@ public class AndLessSrv extends Service {
 	public static final int MODE_DIRECT = 1; 
 	public static final int MODE_LIBMEDIA = 2;
 	public static final int MODE_CALLBACK = 3;
+	public static final int MODE_ALSA = 3;
 	
 	// Ad hoc value. 0x2000 seems to be a maximum used by the driver. MSM datasheets needed. 
 	private int volume = 0x1000;
@@ -290,7 +291,7 @@ public class AndLessSrv extends Service {
 			times = null;	names = null;
 			cup = null;		cur_mode = MODE_NONE;
 			driver_mode = MODE_CALLBACK;
-
+			// driver_mode = MODE_ALSA;
 			if(path != null) dir = new String(path);
 			try {
 				files = new String[items];
@@ -389,7 +390,7 @@ public class AndLessSrv extends Service {
 			cur_mode = mode;
            	return true;
 		}
-				
+			
 		private int getCurPosition() {
 		//	if(!running) return 0;
 			if(cur_mode == MODE_NONE) {
@@ -410,7 +411,7 @@ public class AndLessSrv extends Service {
 			if(ctx == 0) return 0;
 			return audioGetDuration(ctx);
 		}
-				
+						
 		private class PlayThread extends Thread {
 			private int tid = -1;
 			public void run() {
