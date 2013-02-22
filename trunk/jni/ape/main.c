@@ -119,7 +119,8 @@ JNIEXPORT jint JNICALL Java_net_avs234_AndLessSrv_apePlay(JNIEnv *env, jobject o
     int prev_written = 0;
 
     uint32_t samplestoskip;
-	
+    int obps;
+ 	
 #ifdef DBG_TIME
         uint64_t total_tminwrite = 0, total_ttmp = 0, total_sleep = 0;
         int writes = 0, fails = 0;
@@ -209,6 +210,7 @@ JNIEXPORT jint JNICALL Java_net_avs234_AndLessSrv_apePlay(JNIEnv *env, jobject o
         ctx->samplerate = ape_ctx.samplerate;
         ctx->bps = ape_ctx.bps;
 	ctx->written = 0;
+	obps = (ctx->bps == 24) ? 16 : ctx->bps;
 
 	pthread_mutex_lock(&ctx->mutex);
 	ctx->state = MSM_PLAYING;
@@ -292,13 +294,13 @@ JNIEXPORT jint JNICALL Java_net_avs234_AndLessSrv_apePlay(JNIEnv *env, jobject o
                 for (i = 0 ; i < blockstodecode ; i++)
                 {
                     sample32 = decoded0[i];
-                    *(p++) = sample32 & 0xff;
+                 //   *(p++) = sample32 & 0xff;
                     *(p++) = (sample32 >> 8) & 0xff;
                     *(p++) = (sample32 >> 16) & 0xff;
 
                     if (ape_ctx.channels == 2) {
                         sample32 = decoded1[i];
-                        *(p++) = sample32 & 0xff;
+                 //       *(p++) = sample32 & 0xff;
                         *(p++) = (sample32 >> 8) & 0xff;
                         *(p++) = (sample32 >> 16) & 0xff;
                     }
@@ -310,9 +312,9 @@ JNIEXPORT jint JNICALL Java_net_avs234_AndLessSrv_apePlay(JNIEnv *env, jobject o
 
                 n = p - ctx->wavbuf;
 
-                if (ape_ctx.bps == 8) samples = (ape_ctx.channels == 2) ? (n >> 1) : n;
-                else if (ape_ctx.bps == 16) samples = (ape_ctx.channels == 2) ? (n >> 2) : (n >> 1);
-                else if (ape_ctx.bps == 24) samples = (ape_ctx.channels == 2) ? (n / 6) : (n / 3);
+                if (obps == 8) samples = (ape_ctx.channels == 2) ? (n >> 1) : n;
+                else if (obps == 16) samples = (ape_ctx.channels == 2) ? (n >> 2) : (n >> 1);
+         //       else if (ape_ctx.bps == 24) samples = (ape_ctx.channels == 2) ? (n / 6) : (n / 3);
                 
                 if(samplestoskip >= samples) {
                         samplestoskip -= samples;
@@ -334,9 +336,9 @@ JNIEXPORT jint JNICALL Java_net_avs234_AndLessSrv_apePlay(JNIEnv *env, jobject o
                         continue;
                 }
 
-                if(ape_ctx.bps == 8) bytestoskip = (samples - samplestoskip) * ape_ctx.channels;
-                else if (ape_ctx.bps == 16) bytestoskip = (samples - samplestoskip) * ape_ctx.channels * 2;
-                else if (ape_ctx.bps == 24) bytestoskip = (samples - samplestoskip) * ape_ctx.channels * 3;
+                if(obps == 8) bytestoskip = (samples - samplestoskip) * ape_ctx.channels;
+                else if (obps == 16) bytestoskip = (samples - samplestoskip) * ape_ctx.channels * 2;
+          //      else if (ape_ctx.bps == 24) bytestoskip = (samples - samplestoskip) * ape_ctx.channels * 3;
 
 //__android_log_print(ANDROID_LOG_INFO,"liblossless", "samplestoskip %d, samples %d, bytestoskip %d sz %d\n", 
 //		samplestoskip, samples, bytestoskip,n);
@@ -352,7 +354,7 @@ JNIEXPORT jint JNICALL Java_net_avs234_AndLessSrv_apePlay(JNIEnv *env, jobject o
 	    if(prev_written && ctx->mode != MODE_CALLBACK) {	
 		    gettimeofday(&tstop,0);
 		    tminwrite = ((uint64_t)((uint64_t)prev_written)*1000000)/
-			((uint64_t)(ape_ctx.samplerate*ape_ctx.channels*(ape_ctx.bps/8)));
+			((uint64_t)(ape_ctx.samplerate*ape_ctx.channels*(obps/8)));
 	            timersub(&tstop,&tstart,&ttmp);
 	            if(tminwrite > ttmp.tv_usec){
 				usleep((tminwrite-ttmp.tv_usec)/4);

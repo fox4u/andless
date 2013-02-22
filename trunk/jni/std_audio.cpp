@@ -16,10 +16,10 @@
 
 #ifdef BUILD_JB
 #define _MUSIC 	AUDIO_STREAM_MUSIC
-#define _PCM_16_BIT AUDIO_FORMAT_PCM_16_BIT 
+#define FMTBPS AUDIO_FORMAT_PCM_16_BIT 
 #else
 #define _MUSIC AudioSystem::MUSIC
-#define _PCM_16_BIT AudioSystem::PCM_16_BIT
+#define FMTBPS AudioSystem::PCM_16_BIT
 #endif
 
 static int sdk_version = 0;
@@ -62,14 +62,15 @@ int libmedia_start(msm_ctx *ctx, int channels, int samplerate) {
    if(!atrack) return LIBLOSSLESS_ERR_INIT;
    ctx->track = atrack; 	
    status_t status;	
+   	
 #ifndef BUILD_JB
-   status = atrack->set(_MUSIC, samplerate, _PCM_16_BIT, channels, DEFAULT_CONF_BUFSZ/(2*channels));
+   status = atrack->set(_MUSIC, samplerate, FMTBPS, channels, DEFAULT_CONF_BUFSZ/(2*channels));
    if(status != NO_ERROR) { 
   __android_log_print(ANDROID_LOG_INFO,"liblossless","AudioTrack->set failed, error code=%d!", status);
 #endif
   __android_log_print(ANDROID_LOG_INFO,"liblossless","Well... trying new Android AudioSystem interface");
 	int chans = (channels == 2) ? 12 : 4;
-	status = atrack->set(_MUSIC, samplerate, _PCM_16_BIT, chans, DEFAULT_CONF_BUFSZ/(2*channels));
+	status = atrack->set(_MUSIC, samplerate, FMTBPS, chans, DEFAULT_CONF_BUFSZ/(2*channels));
 	   if(status != NO_ERROR) {
   __android_log_print(ANDROID_LOG_INFO,"liblossless","Does not work, error code=%d. Bailing out.", status);
 		delete atrack; ctx->track = 0;
@@ -179,9 +180,9 @@ int libmediacb_start(msm_ctx *ctx, int channels, int samplerate) {
 	else chans = channels;
 
 #ifdef BUILD_JB
-	status = atrack->set(_MUSIC, samplerate, _PCM_16_BIT, chans, DEFAULT_ATRACK_CONF_BUFSZ/(2*channels),AUDIO_OUTPUT_FLAG_NONE,cbf,ctx);
+	status = atrack->set(_MUSIC, samplerate, FMTBPS, chans, DEFAULT_ATRACK_CONF_BUFSZ/(2*channels),AUDIO_OUTPUT_FLAG_NONE,cbf,ctx);
 #else
-	status = atrack->set(_MUSIC, samplerate, _PCM_16_BIT, chans, DEFAULT_ATRACK_CONF_BUFSZ/(2*channels),0,cbf,ctx);
+	status = atrack->set(_MUSIC, samplerate, FMTBPS, chans, DEFAULT_ATRACK_CONF_BUFSZ/(2*channels),0,cbf,ctx);
 #endif
 	
    	if(status != NO_ERROR) {
