@@ -28,6 +28,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -52,6 +53,8 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
@@ -98,6 +101,8 @@ public class AndLess extends Activity implements Comparator<File> {
     	}
   		
     	// UI elements defined in layout xml file.
+    	private LinearLayout layout_background;
+    	private LinearLayout LinearLayout01; 
 		private Button buttPause, buttPrev, buttNext, buttVMinus, buttVPlus, ButtonVolume;
 		private TextView nowTime, allTime;
     	private ListView fileList;
@@ -999,13 +1004,16 @@ public class AndLess extends Activity implements Comparator<File> {
             Intent ii = getIntent();
     		prefs = new Prefs();
             prefs.load();
-
+            
             // ui preferences
             setTheme(android.R.style.Theme_Light);
             setContentView(R.layout.main);
             setContent();
             
-			fileList.setBackgroundResource(android.R.color.background_light); 
+            readNightMode();
+            
+            // see readNightMode. 
+			//fileList.setBackgroundResource(android.R.color.background_light); 
             
             buttPause.setEnabled(true);
 
@@ -1126,6 +1134,9 @@ public class AndLess extends Activity implements Comparator<File> {
             buttPause = (Button) findViewById(R.id.ButtonPause);
             buttPrev = (Button) findViewById(R.id.ButtonPrev);
             buttNext = (Button) findViewById(R.id.ButtonNext);
+            
+            layout_background = (LinearLayout) findViewById(R.id.layout_background);
+            LinearLayout01 = (LinearLayout) findViewById(R.id.LinearLayout01);
             
             ButtonVolume = (Button) findViewById(R.id.ButtonVolume);
             fileList = (ListView) findViewById(R.id.FileList);
@@ -1410,6 +1421,52 @@ public class AndLess extends Activity implements Comparator<File> {
 		
 		}
     	
+    	private boolean mNightMode = false;
+    	private void readNightMode() {
+    		
+    		SharedPreferences shpr = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+    		
+    		mNightMode = shpr.getBoolean("NightMode", false);
+
+    		if (layout_background != null) {
+    			if (mNightMode) {
+    				layout_background.setBackgroundColor(Color.BLACK);
+    			} else {
+    				layout_background.setBackgroundResource(R.drawable.bg);
+    			}
+    		}
+    		
+    		if (LinearLayout01 != null) {
+    			if (mNightMode) {
+    				LinearLayout01.setBackgroundColor(Color.BLACK);
+    			} else {
+    				LinearLayout01.setBackgroundColor(Color.WHITE);
+    			}
+    		}
+
+    		if (fileList != null) {
+    			final ListAdapter la = fileList.getAdapter();
+
+    			if (la != null) {
+    				IconifiedTextListAdapter tla = null;
+    				if (la instanceof IconifiedTextListAdapter) {
+    					tla = (IconifiedTextListAdapter) la;
+    	
+    					if (tla != null) {
+    						tla.setNightMode(mNightMode);
+    						fileList.invalidateViews();
+    					}
+    				}
+    			}
+
+    			if (mNightMode == false) {
+					fileList.setBackgroundResource(android.R.color.background_light);
+				} else {
+					fileList.setBackgroundResource(android.R.color.background_dark);
+				}
+    		}
+    	}
+    	
     	@Override
     	public boolean onOptionsItemSelected(MenuItem item) {
     		switch (item.getItemId()) {
@@ -1418,6 +1475,23 @@ public class AndLess extends Activity implements Comparator<File> {
     	 		Intent i = new Intent(this, Preferences.class);
     	 		startActivity(i);
     	     	return true;
+    	     	
+    		case R.id.NightMode:
+    			// read old value
+    			SharedPreferences shpr = PreferenceManager
+    					.getDefaultSharedPreferences(getBaseContext());
+    			boolean nightMode = shpr.getBoolean("NightMode", false);
+
+    			// invert & save
+    			SharedPreferences.Editor editor = shpr.edit();
+    			editor.putBoolean("NightMode", !nightMode);
+    			editor.commit();
+
+    			// set global variable + apply
+    			readNightMode();
+
+    			return true;
+    	     	
     	 	case R.id.Quit:
     	 		ExitFromProgram();
     	     	return true;
@@ -1662,6 +1736,8 @@ public class AndLess extends Activity implements Comparator<File> {
     			IconifiedTextListAdapter ita = new IconifiedTextListAdapter(this);
     			ita.setListItems(directoryEntries);
     			fileList.setAdapter(ita);
+    			readNightMode();
+    			
     			return true;
     			
     	    } catch (Exception e) {
@@ -1770,6 +1846,7 @@ public class AndLess extends Activity implements Comparator<File> {
     	        IconifiedTextListAdapter ita = new IconifiedTextListAdapter(this);
     	        ita.setListItems(directoryEntries);
     	        fileList.setAdapter(ita);
+    	        readNightMode();
     	    		
     	        return true;
     	    
@@ -1938,6 +2015,7 @@ public class AndLess extends Activity implements Comparator<File> {
     			IconifiedTextListAdapter ita = new IconifiedTextListAdapter(this);
     			ita.setListItems(directoryEntries);
     			fileList.setAdapter(ita);
+    			readNightMode();
     	
     	        return true;
     		

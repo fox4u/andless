@@ -73,6 +73,7 @@
 <string name="strAbout">andLess Android player for lossless audio files built on Feb 22, 2013</string>
 <string name="strAbout1">About</string>
 <string name="strQuit">Quit</string>
+<string name="strNightMode">Night mode</string>
 <string name="strHideExt">Hide filename extensions</string>
 <string name="strErrPrefs">Cannot save preferences!</string>
 <string name="strErrSrvIf">Server returned null binder interface</string>

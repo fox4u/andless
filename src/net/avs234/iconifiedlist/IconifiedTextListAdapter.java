@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import net.avs234.R;
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,20 +53,33 @@ public class IconifiedTextListAdapter extends BaseAdapter {
         public long getItemId(int position) {
                 return position;
         }
+
+	private boolean mNightMode = false;
+	public void setNightMode(boolean nm) {
+		mNightMode = nm;
+	}
        
         /** @param convertView The old view to overwrite, if one is passed
          * @returns a IconifiedTextView that holds wraps around an IconifiedText */
         public View getView(int position, View convertView, ViewGroup parent) {
         	if(convertView == null) {
-        		newView = factory.inflate(R.layout.row, null);
-        	} else {
-        		newView = convertView;
-        	}
+			newView = factory.inflate(R.layout.row, null);
+		} else {
+			newView = convertView;
+		}
             txtView = (TextView)newView.findViewById(R.id.title);
             txtView.setText(mItems.get(position).getText());
             imgView = (ImageView)newView.findViewById(R.id.icon);
             imgView.setImageDrawable(mItems.get(position).getIcon());
-            
-           return newView;
-        }
+		
+		if (mNightMode == false) {
+			ColorStateList d = mContext.getResources().getColorStateList(R.drawable.selector);
+			txtView.setTextColor(d);
+		} else {
+			ColorStateList d = mContext.getResources().getColorStateList(R.drawable.selector_night);
+			txtView.setTextColor(d);
+		}
+
+		return newView;
+	}
 }
