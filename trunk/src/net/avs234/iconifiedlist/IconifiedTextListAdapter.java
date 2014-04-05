@@ -5,6 +5,7 @@ import java.util.List;
 import net.avs234.R;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -75,9 +76,12 @@ public class IconifiedTextListAdapter extends BaseAdapter {
 		if (mNightMode == false) {
 			ColorStateList d = mContext.getResources().getColorStateList(R.drawable.selector);
 			txtView.setTextColor(d);
+			newView.setBackgroundColor(Color.WHITE);
+			
 		} else {
 			ColorStateList d = mContext.getResources().getColorStateList(R.drawable.selector_night);
 			txtView.setTextColor(d);
+			newView.setBackgroundColor(Color.BLACK);
 		}
 
 		return newView;
