@@ -659,11 +659,11 @@ JNIEXPORT jint JNICALL Java_net_avs234_AndLessSrv_flacPlay(JNIEnv *env, jobject 
                  /* Right sample */
                  decoded1[i]=decoded1[i]>>scale;
                  if (fc->bps==24) {
-        	 	 *(p++) = (decoded0[i]&0xff00)>>8;
+        	 	 *(p++) = (decoded1[i]&0xff00)>>8;
 			 *(p++)=(decoded1[i]&0xff0000)>>16;
 		 } else {
 	                 *(p++)=decoded1[i]&0xff;
-	        	 *(p++) = (decoded0[i]&0xff00)>>8;
+	        	 *(p++) = (decoded1[i]&0xff00)>>8;
 		 }
              }
         }
