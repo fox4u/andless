@@ -1,0 +1,75 @@
+12-02 18:37:09.683 V/ConfigFetchTask( 1714): ConfigFetchTask getDeviceDataVersionInfo(): ABFEt1WagthFnpavwiS7QFXCXab48kKpQhOF_pgupwLSnMnJgvhBs5pTYVz8HhMmFfvne-rDtjKNA3guRHdShLcCgfwwWzcUBWbfpgnvmpiufOMclsyu5QtF8t2wWhbDQhZRR4SKg7Q8ZrWpzYymufQcilWJVJ9-rXyMw8KbJSFWkioXKMvnXh9__TlW_jJvAi-WjE9NlwGwTheu4dOnV3i6tokq7-sURGzV7N4qB_u8Uk_eDrf_tPg
+12-02 18:37:09.686 I/GoogleHttpClient( 1714): Falling back to old SSLCertificateSocketFactory
+12-02 18:37:09.824 I/ConfigFetchService( 1714): fetch service done; releasing wakelock
+12-02 18:37:09.827 I/ConfigFetchService( 1714): stopping self
+12-02 18:37:09.838 I/ConfigService( 1494): onDestroy
+12-02 18:37:09.954 W/PropertyValuesHolder( 1373): Method setBrightness() with type int not found on target class class us
+12-02 18:37:09.954 W/PropertyValuesHolder( 1373): Method getBrightness() with type null not found on target class class us
+12-02 18:37:10.063 V/PhoneStatusBar(  927): setLightsOn(true)
+12-02 18:37:10.091 I/AndLess ( 6046): devstring is 00-00
+12-02 18:37:10.093 I/AndLess ( 6046): preferences: card 0, device 0
+12-02 18:37:10.162 I/AndLess ( 6046): started service
+12-02 18:37:10.174 I/art     (  214): Explicit concurrent mark sweep GC freed 709(30KB) AllocSpace objects, 0(0B) LOS objects, 40% free, 15MB/25MB, paused 176us total 11.108ms
+12-02 18:37:10.182 I/art     (  214): Explicit concurrent mark sweep GC freed 5(160B) AllocSpace objects, 0(0B) LOS objects, 40% free, 15MB/25MB, paused 166us total 7.460ms
+12-02 18:37:10.190 I/art     (  214): Explicit concurrent mark sweep GC freed 5(160B) AllocSpace objects, 0(0B) LOS objects, 40% free, 15MB/25MB, paused 166us total 7.498ms
+12-02 18:37:10.191 I/AndLess ( 6046): service bound
+12-02 18:37:10.247 I/liblossless( 6073): 6073 [JNI_OnLoad] JNI_OnLoad
+12-02 18:37:10.250 I/AndLessSrv( 6073): onCreate()
+12-02 18:37:10.254 I/ActivityManager(  799): Displayed net.avs234.alsaplayer/.AndLess: +256ms (total +14s3ms)
+12-02 18:37:10.258 I/AndLessSrv( 6073): onBind()
+12-02 18:37:10.259 I/AndLessSrv( 6073): Headset Inserted: android.intent.action.HEADSET_PLUG
+12-02 18:37:10.260 W/Binder_1( 6089): type=1400 audit(0.0:45): avc: denied { read } for name="controlC0" dev="tmpfs" ino=8286 scontext=u:r:untrusted_app:s0 tcontext=u:object_r:audio_device:s0 tclass=chr_file
+12-02 18:37:10.260 W/Binder_1( 6089): type=1400 audit(0.0:46): avc: denied { write } for name="controlC0" dev="tmpfs" ino=8286 scontext=u:r:untrusted_app:s0 tcontext=u:object_r:audio_device:s0 tclass=chr_file
+12-02 18:37:10.260 W/Binder_1( 6089): type=1400 audit(0.0:47): avc: denied { open } for name="controlC0" dev="tmpfs" ino=8286 scontext=u:r:untrusted_app:s0 tcontext=u:object_r:audio_device:s0 tclass=chr_file
+12-02 18:37:10.260 W/Binder_1( 6089): type=1400 audit(0.0:48): avc: denied { ioctl } for path="/dev/snd/controlC0" dev="tmpfs" ino=8286 scontext=u:r:untrusted_app:s0 tcontext=u:object_r:audio_device:s0 tclass=chr_file
+12-02 18:37:10.274 I/AndLess ( 6046): track name changed to [Stopped]
+12-02 18:37:10.276 I/AndLessSrv( 6073): neednt set device permissions
+12-02 18:37:10.277 I/AndLessSrv( 6073): checkSetDevicePermissions() returned OK
+12-02 18:37:10.277 I/liblossless( 6073): 6089 [audio_init] audio_init: prev_ctx=0x0
+12-02 18:37:10.277 I/liblossless( 6073): 6089 [alsa_select_device] switching to card 0 device 0
+12-02 18:37:10.277 I/liblossless( 6073): 6089 [alsa_select_device] trying to open mixer
+12-02 18:37:10.277 I/liblossless( 6073): 6089 [alsa_select_device] mixer opened, control count: 558
+12-02 18:37:10.277 I/liblossless( 6073): 6089 [alsa_select_device] trying to set controls for built-in card, device 0
+12-02 18:37:10.277 I/liblossless( 6073): 6089 [alsa_select_device] device 0: MultiMedia1 (*)
+12-02 18:37:10.280 I/liblossless( 6073): 6089 [set_mixer_control] SLIMBUS_0_RX Audio Mixer MultiMedia1 -> 1
+12-02 18:37:10.299 I/liblossless( 6073): 6089 [alsa_select_device] selected card=0 device=0 (format/rate masks=0x3/0x39)
+12-02 18:37:10.299 I/liblossless( 6073): 6089 [audio_init] audio_init: return ctx=0xaf532040
+12-02 18:37:10.302 I/AndLessSrv( 6073): initAuidoCard context=0xaf532040
+12-02 18:37:10.302 I/liblossless( 6073): 6089 [alsa_set_volume] saved volume 75
+12-02 18:37:10.302 I/AndLessSrv( 6073): card 0:0 initialised
+12-02 18:37:13.459 I/AndLess ( 6046): Attempting to play file 0 in /storage/emulated/0/Music/UH1971
+12-02 18:37:13.459 I/AndLessSrv( 6073): play(0)
+12-02 18:37:13.459 I/AndLessSrv( 6073): stop()
+12-02 18:37:13.460 I/AndLessSrv( 6073): stop(): player thread was null (my tid 6090)
+12-02 18:37:13.460 I/AndLessSrv( 6073): play(): created new thread from 6090
+12-02 18:37:13.464 I/AndLessSrv( 6073): run(): starting new thread 6100
+12-02 18:37:13.465 I/AndLessSrv( 6073): 6100: trying /storage/emulated/0/Music/UH1971/Uriah Heep - Salisbury - 1971.ape @ time 0
+12-02 18:37:13.465 I/AndLess ( 6046): track name changed to Uriah Heep - Salisbury - 1971
+12-02 18:37:13.523 I/art     (  799): Explicit concurrent mark sweep GC freed 32420(1599KB) AllocSpace objects, 1(16KB) LOS objects, 32% free, 32MB/48MB, paused 863us total 55.968ms
+12-02 18:37:13.538 I/liblossless( 6073): 6100 [ape_play] attempting to play /storage/emulated/0/Music/UH1971/Uriah Heep - Salisbury - 1971.ape at offset 0
+12-02 18:37:13.538 I/liblossless( 6073): 6100 [audio_start] starting context 0xaf532040, state 0
+12-02 18:37:13.538 I/liblossless( 6073): 6100 [apply_mixer_controls] trying to set controls for built-in card
+12-02 18:37:13.544 I/libc    ( 6073): Suppressing debuggerd output because prctl(PR_GET_DUMPABLE)==0
+12-02 18:37:13.550 E/AndLess ( 6046): Binder died, trying to reconnect
+12-02 18:37:13.567 I/Zygote  (  214): Process 6073 exited due to signal (11)
+12-02 18:37:13.612 I/AndLess ( 6046): started service
+12-02 18:37:13.618 I/AndLess ( 6046): service bound
+12-02 18:37:13.650 I/liblossless( 6103): 6103 [JNI_OnLoad] JNI_OnLoad
+12-02 18:37:13.653 I/AndLessSrv( 6103): onCreate()
+12-02 18:37:13.658 I/AndLessSrv( 6103): onBind()
+12-02 18:37:13.660 I/AndLessSrv( 6103): Headset Inserted: android.intent.action.HEADSET_PLUG
+12-02 18:37:13.668 I/AndLess ( 6046): track name changed to [Stopped]
+12-02 18:37:13.671 I/AndLessSrv( 6103): neednt set device permissions
+12-02 18:37:13.671 I/AndLessSrv( 6103): checkSetDevicePermissions() returned OK
+12-02 18:37:13.671 I/liblossless( 6103): 6118 [audio_init] audio_init: prev_ctx=0x0
+12-02 18:37:13.671 I/liblossless( 6103): 6118 [alsa_select_device] switching to card 0 device 0
+12-02 18:37:13.671 I/liblossless( 6103): 6118 [alsa_select_device] trying to open mixer
+12-02 18:37:13.671 I/liblossless( 6103): 6118 [alsa_select_device] mixer opened, control count: 558
+12-02 18:37:13.671 I/liblossless( 6103): 6118 [alsa_select_device] trying to set controls for built-in card, device 0
+12-02 18:37:13.671 I/liblossless( 6103): 6118 [alsa_select_device] device 0: MultiMedia1 (*)
+12-02 18:37:13.674 I/liblossless( 6103): 6118 [set_mixer_control] SLIMBUS_0_RX Audio Mixer MultiMedia1 -> 1
+12-02 18:37:13.689 I/liblossless( 6103): 6118 [alsa_select_device] selected card=0 device=0 (format/rate masks=0x3/0x39)
+12-02 18:37:13.689 I/liblossless( 6103): 6118 [audio_init] audio_init: return ctx=0xa4332040
+12-02 18:37:13.689 I/AndLessSrv( 6103): initAuidoCard context=0xa4332040
+12-02 18:37:13.689 I/liblossless( 6103): 6118 [alsa_set_volume] saved volume 75
+12-02 18:37:13.690 I/AndLessSrv( 6103): card 0:0 initialised

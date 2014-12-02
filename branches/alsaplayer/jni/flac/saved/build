@@ -1,0 +1,4 @@
+#!/bin/bash
+
+andcc -Wl,-pie -DCPU_ARM -mthumb -march=armv7-a -O3 -Wall -DBUILD_STANDALONE *.c arm.S -o flacdec
+
