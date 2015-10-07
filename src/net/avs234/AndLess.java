@@ -965,7 +965,7 @@ public class AndLess extends Activity implements Comparator<File> {
         		prefs.driver_mode = AndLessSrv.MODE_DIRECT;
         		ButtonVolume.setVisibility(View.VISIBLE);
         	} else {
-        		prefs.driver_mode = AndLessSrv.MODE_CALLBACK;
+        		prefs.driver_mode = AndLessSrv.MODE_LIBMEDIA;
         		ButtonVolume.setVisibility(View.GONE);
         	}
 			if(b_m) {
@@ -1082,7 +1082,7 @@ public class AndLess extends Activity implements Comparator<File> {
         		SharedPreferences shpr = getSharedPreferences(PREFS_NAME, 0);
                 shuffle = shpr.getBoolean("shuffle", false);		
                 savebooks = shpr.getBoolean("save_books", false);
-                driver_mode = shpr.getInt("driver_mode", AndLessSrv.MODE_CALLBACK);
+                driver_mode = shpr.getInt("driver_mode", AndLessSrv.MODE_LIBMEDIA);
                 last_path = shpr.getString("last_path", null);
                 last_played_file = shpr.getString("last_played_file", null);
                 last_played_pos = shpr.getInt("last_played_pos",0);

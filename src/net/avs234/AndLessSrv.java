@@ -290,7 +290,8 @@ public class AndLessSrv extends Service {
 			paused = false;	running = false; 
 			times = null;	names = null;
 			cup = null;		cur_mode = MODE_NONE;
-			driver_mode = MODE_CALLBACK;
+			//driver_mode = MODE_CALLBACK;
+			driver_mode = MODE_LIBMEDIA;
 			// driver_mode = MODE_ALSA;
 			if(path != null) dir = new String(path);
 			try {
